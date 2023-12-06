@@ -124,13 +124,13 @@ GROUP BY pays.nom
 ORDER BY total DESC;
 
 -- 14
-Select pays.nom, count(film)
+Select pays.nom, count(film.id) nb_films
 from film
          JOIN film_pays on film.id=film_pays.film_id
          JOIN pays on film_pays.pays_id=pays.id
 group by pays.nom
-HAVING  count(film) BETWEEN 1 and 2
-order by count(film) Desc;
+HAVING  nb_films BETWEEN 1 and 2
+order by nb_films Desc;
 
 -- 15
 SELECT c.libelle, avg(film.annee)
