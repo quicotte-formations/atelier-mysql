@@ -262,16 +262,16 @@ FROM    marque m;
 
 
 -- 26 Le produit le plus cher de chaque catégorie
-SELECT  c.nom AS Categorie, p.nom AS NomProduit, MAX(p.prix) AS PrixMax
+SELECT  p.nom AS Produit, p.prix AS Prix, c.nom AS Categorie
 FROM    produit p
         JOIN categorie c ON p.categorie_id = c.id
-WHERE p.prix IN (
+WHERE p.prix = (
     SELECT  MAX(p2.prix)
     FROM    produit p2
     WHERE   p2.categorie_id = p.categorie_id
 )
-GROUP BY c.nom, p.nom
-ORDER BY c.nom, PrixMax DESC;
+ORDER BY c.nom;
+
 
 -- 27 Le nombre de produits de chaque marque, trié en ordre décroissant
 SELECT  marque.nom, COUNT(produit.id) AS NombreDeProduits
