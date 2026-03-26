@@ -37,31 +37,49 @@ where casting.libelle='Quentin Tarantino'
   and genre.nom='Policier'
   and pays.nom='États-Unis';
 
--- 7
-SELECT COUNT (DISTINCT f.id)
-FROM film f
-         JOIN film_genre fg ON f.id = fg.film_id
-         JOIN genre g ON g.id = fg.genre_id
-         JOIN real_film rf ON f.id = rf.film_id
-         JOIN casting c1 ON c1.id = rf.casting_id
-         JOIN acteur_film af ON f.id = af.film_id
-         JOIN casting c2 ON c2.id = af.casting_id
-WHERE g.nom = 'Policier'
-  AND c2.libelle='Steve Buscemi'
-  AND c1.libelle LIKE '%Coen%';
+-- 7 
 
--- 8
-Select film
-from film
-         JOIN real_film on film.id=real_film.film_id
-         JOIN casting as cast1 on real_film.casting_id=cast1.id
-Where cast1.libelle = 'Sylvester Stallone'
-Intersect
-Select film
-from film
-         JOIN acteur_film on film.id=acteur_film.film_id
-         JOIN casting as cast2 on acteur_film.casting_id=cast2.id
-Where cast2.libelle = 'Sylvester Stallone';
+SELECT COUNT(DISTINCT id) as RESULTAT 
+FROM (
+    SELECT film.id
+    FROM film 
+    JOIN acteur_film ON film.id = acteur_film.film_id
+    JOIN casting ON acteur_film.casting_id = casting.id 
+    WHERE casting.libelle = 'Steve Buscemi'
+
+    INTERSECT
+
+    SELECT film.id
+    FROM film 
+    JOIN real_film ON film.id = real_film.film_id 
+    JOIN casting ON real_film.casting_id = casting.id 
+
+    WHERE casting.libelle LIKE '%Coen%'
+    
+    INTERSECT
+    
+    SELECT film.id
+    FROM film 
+
+    JOIN film_genre ON film.id = film_genre.film_id
+    JOIN genre ON film_genre.genre_id = genre.id 
+    WHERE genre.nom = 'Policier'
+
+) AS resultat;
+
+-- 8 
+
+SELECT film.*
+FROM film
+         JOIN real_film ON film.id=real_film.film_id
+         JOIN casting ON real_film.casting_id=casting.id
+WHERE casting.libelle = 'Sylvester Stallone'
+INTERSECT
+SELECT film.*
+FROM film
+         JOIN acteur_film ON film.id=acteur_film.film_id
+         JOIN casting ON acteur_film.casting_id=casting.id
+WHERE casting.libelle = 'Sylvester Stallone';
 
 -- 9
 SELECT COUNT(*)
